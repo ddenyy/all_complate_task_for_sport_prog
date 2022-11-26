@@ -1,0 +1,26 @@
+#include <iostream>
+using namespace std;
+ 
+int main() {
+	int k, r;
+	cin >> k >> r;
+	int s = 0;
+	bool flag = true;
+	if ((k - r) % 10 == 0) {
+		cout << 1;
+	}
+	else {
+		while (flag) {
+			if (s % 10 != r) {
+				s += k;
+			}
+			else {
+				flag = false;
+			}
+			if (s % 10 == 0) {
+				flag = false;
+			}
+		}
+		cout << s / k;
+	}
+}

@@ -1,0 +1,182 @@
+#include <iostream>
+#include <vector>
+#include <cctype>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <fstream>
+using namespace std;
+#define ll long long
+#define all(x) x.begin(),x.end()
+
+/*
+структура чтоб распарсить строку которая идёт с счетоа
+*/
+struct pair_three {
+	int first = 0;
+	int second = 0;
+	string name = "";
+};
+
+/*
+ф-ция поиска индекса элемента вектора пар.
+возвращает индекс
+*/
+int find_by_pair(vector<pair<string, int>> Finish_table, string key) {
+	for (int i = 0; i < Finish_table.size(); i++) {
+		if (Finish_table[i].first == key) {
+			return i;
+		}
+	}
+}
+
+/*
+ф-ция выводит ответ
+*/
+void output(vector<pair<string, int>> Finish_table, int max_points, ofstream& fout) {
+	for (int i = 0; i < Finish_table.size(); i++) {
+		if (Finish_table[i].second == max_points) {
+			fout << Finish_table[i].first << ' ' << Finish_table[i].second << '\n';
+			break;
+		}
+	}
+}
+
+/*
+ф-ция поиска максимального количества очков у человека
+*/
+int find_max_points(vector<pair<string, int>> Finish_table) {
+	int max = 0;
+	for (int i = 0; i < Finish_table.size(); i++) {
+		if (Finish_table[i].second > max) {
+			max = Finish_table[i].second;
+		}
+	}
+	return max;
+}
+
+/*
+ф-ция парсера входных строк.
+из массива троек P
+и его размера m
+*/
+void parser_str(ifstream& fin, vector<pair_three>& Array_of_notes_teacher, int quantity_notes) {
+	string buf;
+	getline(fin, buf);
+	for (int i = 0; i < quantity_notes; i++) {
+		string curr_info = "";
+		string first_point = "";
+		string second_point = "";
+		string name = "";
+		getline(fin, curr_info);
+		int j = 0;
+		while (curr_info[j] != ':') {
+			first_point += curr_info[j];
+			j++;
+		}
+		j++;
+		while (curr_info[j] != ' ') {
+			second_point += curr_info[j];
+			j++;
+		}
+		j += 1;
+		while (j != curr_info.size()) {
+			name += curr_info[j];
+			j++;
+		}
+		Array_of_notes_teacher[i].first = stoi(first_point);
+		Array_of_notes_teacher[i].second = stoi(second_point);
+		Array_of_notes_teacher[i].name = name;
+	}
+}
+
+
+void cout_points(vector<pair<string, int>>& Finish_table, vector<pair_three>& Array_of_notes_teacher, int quantity_notes) {
+	for (int i = 0; i < quantity_notes; i++) {
+		// индекс (номер) человека в массиве итоговой таблицы
+		int index = find_by_pair(Finish_table, Array_of_notes_teacher[i].name);
+		if (i == 0)
+		{
+			if (Array_of_notes_teacher[i].first != 0)
+			{
+				Finish_table[index].second = Array_of_notes_teacher[i].first;
+			}
+			else if (Array_of_notes_teacher[i].second != 0)
+			{
+				Finish_table[index].second = Array_of_notes_teacher[i].second;
+			}
+		}
+		else {
+			if (Array_of_notes_teacher[i].first == Array_of_notes_teacher[i - 1].first)
+			{
+				Finish_table[index].second += Array_of_notes_teacher[i].second - Array_of_notes_teacher[i - 1].second;
+			}
+			if (Array_of_notes_teacher[i].second == Array_of_notes_teacher[i - 1].second)
+			{
+				Finish_table[index].second += Array_of_notes_teacher[i].first - Array_of_notes_teacher[i - 1].first;
+			}
+		}
+	}
+}
+
+// ф-ция перевода символа в нижний регистр
+string to_lower_my(string s) {
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] >= 'A' && s[i] <= 'Z') {
+			s[i] += 'a' - 'A';
+		}
+	}
+	return s;
+}
+
+// ф-ция для корректного сравнивания строк в лексикографическом порядке
+bool comp(pair<string, int> a, pair<string, int> b) {
+	a.first = to_lower_my(a.first);
+	b.first = to_lower_my(b.first);
+	return a.first < b.first;
+}
+
+// считывает данные из файла и заносит их в вектор пар
+void input_in_array(vector<pair<string, int>>& Finish_table, int quantity_players, ifstream& fin) {
+	for (int i = 0; i < quantity_players; i++)
+	{
+		fin >> Finish_table[i].first;
+	}
+}
+
+
+int main() {
+	// ускорение ввода
+	ios_base::sync_with_stdio(0);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	
+	// файлы на ввод и вывод информации соотвественно
+	ifstream fin("input.txt");
+	ofstream fout("output.txt");
+
+	int quantity_players;
+	fin >> quantity_players;
+	// это массив пар в котором после обработки всех входных данных
+	// будет имя человека и количество всех набранных им очков за игру
+	vector<pair<string, int>> Finish_table(quantity_players);
+
+	input_in_array(Finish_table, quantity_players, fin);
+
+	// количество записей физрука
+	int quantity_notes;
+	fin >> quantity_notes;
+	// вектор троек из текущего счета и имени человека который забил
+	vector<pair_three> Array_of_notes_teacher(quantity_notes);
+
+	parser_str(fin, Array_of_notes_teacher, quantity_notes);
+	cout_points(Finish_table, Array_of_notes_teacher, quantity_notes);
+	sort(all(Finish_table), comp);
+	// максимальное количество набранных очков из всех участников
+	int max_points = find_max_points(Finish_table);
+	output(Finish_table, max_points, fout);
+
+	fin.close();
+	fout.close();
+	return 0;
+}

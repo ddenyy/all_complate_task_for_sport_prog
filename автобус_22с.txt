@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n; // количество остановок
+    int now_in_bus = 0;
+    int out_of_bus = 0;
+    int enter_of_bus = 0;
+    int min_content = 0;
+    cin >> n;
+    cin >> out_of_bus >> enter_of_bus;
+    now_in_bus += enter_of_bus;
+    min_content = enter_of_bus;
+    for (int i = 1; i < n; i++) {
+        cin >> out_of_bus >> enter_of_bus;
+        if (now_in_bus - out_of_bus + enter_of_bus > min_content) {
+            min_content = now_in_bus - out_of_bus + enter_of_bus;
+        }
+        now_in_bus = now_in_bus - out_of_bus + enter_of_bus;
+
+    }
+    cout << min_content;
+}

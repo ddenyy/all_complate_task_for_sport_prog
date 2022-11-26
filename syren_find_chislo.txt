@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+bool bin_find(int* A, int size, int key) {
+	int l = 0;
+	int r = size - 1;
+	while (r - l > 1) {
+		int mid = l + (r - l) / 2;
+		if (A[mid] > key) {
+			r = mid;
+		}
+		else {
+			l = mid;
+		}
+	}
+	if (A[l] == key) {
+		return true;
+	}
+	else if (A[r] == key) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+
+int main() {
+	int count_anj;
+	int question_den;
+	cin >> count_anj >> question_den;
+	int* ar_anj = new int[count_anj];
+	for (int i = 0; i < count_anj; i++) {
+		cin >> ar_anj[i];
+	}
+	sort(ar_anj, ar_anj + count_anj);
+
+	for (int i = 0; i < question_den; i++) {
+		int number_den;
+		cin >> number_den;
+		if (bin_find(ar_anj, count_anj, number_den)) {
+			cout << "YES" << "\n";
+		}
+		else {
+			cout << "NO" << "\n";
+		}
+	}
+}

@@ -1,0 +1,92 @@
+#include <iostream>
+using namespace std;
+typedef long long ll;
+
+// структура данных для 1 набора
+struct info_about_animals
+{
+    int food_for_dog;
+    int food_for_cat;
+    int food_for_all;
+    int quantity_dog;
+    int quantity_cat;
+};
+
+// ф-ция считывает массив
+void cin_array(info_about_animals* array, int size) {
+    for (int i = 0; i < size; i++) {
+        cin >> array[i].food_for_dog;
+        cin >> array[i].food_for_cat;
+        cin >> array[i].food_for_all;
+        cin >> array[i].quantity_dog;
+        cin >> array[i].quantity_cat;
+    }
+}
+/*
+функция проверяет сможет ли Поликарп покормить всех своих животных
+принимает 5 параметров типа int
+кол-во еды для собак
+кол-во еды для кошек
+кол-во еды которая подходит и собакам и кошкам
+кол-во собак
+кол-во кошек
+возвращает true или false в зависимости от того сможет ли Поликарп накормить своих животных
+*/
+bool check_feed_animals(int food_for_dog, int food_for_cat, int food_for_all, int quantity_dog, int quantity_cat) {
+    if (food_for_dog >= quantity_dog && food_for_cat >= quantity_cat) {
+        return true;
+    }
+    if (food_for_dog < quantity_dog && food_for_cat >= quantity_cat) {
+        if (quantity_dog - food_for_dog <= food_for_all) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    if (food_for_dog >= quantity_dog && food_for_cat < quantity_cat) {
+        if (quantity_cat - food_for_cat <= food_for_all) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    if (food_for_dog < quantity_dog && food_for_cat < quantity_cat) {
+        if (quantity_dog - food_for_dog + quantity_cat - food_for_cat <= food_for_all) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+// ф-ция выводит ответ. принимает 2 параметра. массив из наборов структур и размер массива.
+void cout_answer(info_about_animals* array, int size) {
+    for (int i = 0; i < size; i++) {
+        if (check_feed_animals(array[i].food_for_dog, array[i].food_for_cat, array[i].food_for_all, array[i].quantity_dog, array[i].quantity_cat)) {
+            cout << "YES" << '\n';
+        }
+        else {
+            cout << "NO" << '\n';
+        }
+    }
+}
+
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    int t; // количество наборов входных данных 
+    cin >> t;
+    info_about_animals* array = new info_about_animals[t];
+
+    cin_array(array, t);
+    cout_answer(array, t);
+    return 0;
+}
+
+
+

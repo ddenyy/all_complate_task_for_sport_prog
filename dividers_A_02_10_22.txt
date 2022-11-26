@@ -1,0 +1,50 @@
+#include <iostream>
+using namespace std;
+
+// принимает число int. возвращает сумму его цифр
+int sum_digits(int a) {
+    int sum_digit_a = 0;
+    while (a != 0) {
+        sum_digit_a += a % 10;
+        a = a / 10;
+    }
+    return sum_digit_a;
+}
+
+// принимает два числа int. возвращает true если первое лучше второго. 
+// false если второе лучше первого
+bool is_better(int a, int b) {
+    int sum_digit_a = sum_digits(a);
+    int sum_digit_b = sum_digits(b);
+    if (sum_digit_a == sum_digit_b) {
+        if (a < b) {
+            return true;
+        }
+        return false;
+    }
+    else if (sum_digit_a > sum_digit_b) {
+        return true;
+    }
+    else {
+        return false;
+    }
+    
+}
+
+int main() {
+    int n; 
+    int best_divider = 1;
+    int worse_divider = 1;
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        if (n % i == 0) {
+            if (!is_better(best_divider, i)) {
+                best_divider = i;
+            }
+            if (is_better(worse_divider, i)) {
+                worse_divider = i;
+            }
+        }
+    }
+    cout << best_divider << ' ' << worse_divider;
+}

@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+int main() {
+	int kol_tests;
+	cin >> kol_tests;
+	for (int j = 0; j < kol_tests; j++) {
+		vector<int> S;
+		int t;
+		int a;
+		int min_raznost = 2147483647;
+		cin >> t;
+		for (int i = 0; i < t; i++) {
+			cin >> a;
+			S.push_back(a);
+		}
+		sort(S.begin(), S.end());
+		for (int i = 1; i < S.size(); i++) {
+			if (abs(S[i - 1] - S[i]) < min_raznost) {
+				min_raznost = abs(S[i - 1] - S[i]);
+			}
+		}
+		cout << min_raznost << '\n';
+	}
+}

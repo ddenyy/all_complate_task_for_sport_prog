@@ -1,0 +1,102 @@
+#include<iostream>
+using namespace std;
+/*
+ф-ция слияния
+принимает массив который сортируем
+нижнюю, вернюю и медианную границу
+ссылку на буферный массив
+*/
+void merge(int* Merge_array, int low, int high, int mid, int* Buffer_array)
+{
+	int cursor_1;					// указатель первого массива
+	int cursor_2;					// указатель второго массива
+	int current_cursor;				// указатель буферного массива
+	cursor_1 = low;
+	cursor_2 = mid + 1;
+	current_cursor = low;
+	while (cursor_1 <= mid && cursor_2 <= high)
+	{
+		if (Merge_array[cursor_1] < Merge_array[cursor_2])
+		{
+			Buffer_array[current_cursor] = Merge_array[cursor_1];
+			current_cursor++;
+			cursor_1++;
+		}
+		else
+		{
+			Buffer_array[current_cursor] = Merge_array[cursor_2];
+			cursor_2++;
+			current_cursor++;
+		}
+	}
+	while (cursor_1 <= mid)
+	{
+		Buffer_array[current_cursor] = Merge_array[cursor_1];
+		current_cursor++;
+		cursor_1++;
+	}
+	while (cursor_2 <= high)
+	{
+		Buffer_array[current_cursor] = Merge_array[cursor_2];
+		current_cursor++;
+		cursor_2++;
+	}
+	for (int i = low; i <= high; i++)
+	{
+		Merge_array[i] = Buffer_array[i];
+	}
+}
+/*
+ф-ция сортировки слиянием
+принимает массив который сортируем
+нижнюю, вернюю границы соотвественно
+ссылку на буферный массив
+*/
+void merge_sort(int* Merge_array, int low, int high, int* Buffer_array) {
+	int mid;
+	if (low < high)
+	{
+		mid = (low + high) / 2;
+		merge_sort(Merge_array, low, mid, Buffer_array);
+		merge_sort(Merge_array, mid + 1, high, Buffer_array);
+		merge(Merge_array, low, high, mid, Buffer_array);
+	}
+}
+
+/*
+ф-ция считывает два массива
+принимает ссылки типа int* на массив
+принимает размер массива
+*/
+void cin_arrays(int* Merge_array, int size_array) {
+	for (int i = 0; i < size_array; i++) {
+		cin >> Merge_array[i];
+	}
+}
+
+/*
+ф-ция выводит ответ на задачу.
+принимает массив и размер массива
+*/
+void cout_answer(int* Merge_array, int size) {
+	cout << Merge_array[size - 2] + Merge_array[size - 1] - Merge_array[0] - Merge_array[1] << endl;
+}
+
+int main()
+{
+	int count_tests;										// количество тестов
+	cin >> count_tests;
+	int size_array;											// размер массива для теста
+
+	while (count_tests--) {
+		cin >> size_array;
+		int* Merge_array = new int[size_array];				// массив из условия
+		int* Buffer_array = new int[size_array];			// буферный массив
+		cin_arrays(Merge_array, size_array);
+		merge_sort(Merge_array, 0, size_array - 1, Buffer_array);
+		cout_answer(Merge_array, size_array);
+		delete[]Buffer_array;
+		delete[]Merge_array;
+	}
+	return 0;
+}

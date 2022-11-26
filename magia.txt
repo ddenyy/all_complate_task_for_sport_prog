@@ -1,0 +1,73 @@
+long int A, B, C;
+	long int X, Y, Z;
+
+	cin >> A >> B >> C >> X >> Y >> Z;
+
+	if (A >= X && B >= Y && C >= Z) {
+		cout << "It is a kind of magic";
+		return 0;
+	}
+	if (A >= X && B >= Y && C < Z) {
+		if (C + (A - X) + (B - Y) >= Z) {
+			cout << "It is a kind of magic";
+			return 0;
+		}
+		else {
+			cout << "There are no miracles in life";
+			return 0;
+		}
+	}
+	if (A >= X && B < Y && C >= Z) {
+		if (Y - B <= C && C + (A - X) - (Y - B) >= Z) {
+			cout << "It is a kind of magic";
+			return 0;
+		}
+		else {
+			cout << "There are no miracles in life";
+			return 0;
+		}
+	}
+	if (A >= X && B < Y && C < Z) {
+		if (Y - B <= C && C + (A - X) - (Y - B) >= Z) {
+			cout << "It is a kind of magic";
+			return 0;
+		}
+		else {
+			cout << "There are no miracles in life";
+			return 0;
+		}
+	}
+	if (A < X && B >= Y && C >= Z) {
+		if (X - A <= C && C + (B - Y) - (X - A) >= Z) {
+			cout << "It is a kind of magic";
+			return 0;
+		}
+		else {
+			cout << "There are no miracles in life";
+			return 0;
+		}
+	}
+	if (A < X && B >= Y && C < Z) {
+		if (X - A <= C && C + (B - Y) - (X - A) >= Z) {
+			cout << "It is a kind of magic";
+			return 0;
+		}
+		else {
+			cout << "There are no miracles in life";
+			return 0;
+		}
+	}
+	if (A < X && B < Y && C >= Z) {
+		if (C - (X - A) - (Y - B) >= Z) {
+			cout << "It is a kind of magic";
+			return 0;
+		}
+		else {
+			cout << "There are no miracles in life";
+			return 0;
+		}
+	}
+	if (A < X && B < Y && C < Z) {
+		cout << "There are no miracles in life";
+		return 0;
+	}

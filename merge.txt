@@ -1,0 +1,124 @@
+#include<iostream>
+
+
+using namespace std;
+
+
+void merge(int* Merge_array, int low, int high, int mid, int* Buffer_array)
+{
+	int cursor_1;					// указатель первого массива
+	int cursor_2;					// указатель второго массива
+	int current_cursor;				// указатель буферного массива
+	cursor_1 = low;
+	cursor_2 = mid + 1;
+	current_cursor = low;
+	while (cursor_1 <= mid && cursor_2 <= high)
+	{
+		if (Merge_array[cursor_1] < Merge_array[cursor_2])
+		{
+			Buffer_array[current_cursor] = Merge_array[cursor_1];
+			current_cursor++;
+			cursor_1++;
+		}
+		else
+		{
+			Buffer_array[current_cursor] = Merge_array[cursor_2];
+			cursor_2++;
+			current_cursor++;
+		}
+	}
+	while (cursor_1 <= mid)
+	{
+		Buffer_array[current_cursor] = Merge_array[cursor_1];
+		current_cursor++;
+		cursor_1++;
+	}
+	while (cursor_2 <= high)
+	{
+		Buffer_array[current_cursor] = Merge_array[cursor_2];
+		current_cursor++;
+		cursor_2++;
+	}
+	for (int i = low; i <= high; i++)
+	{
+		Merge_array[i] = Buffer_array[i];
+	}
+}
+
+void merge_sort(int* A, int low, int high, int* C) {
+	int mid;
+	if (low < high)
+	{
+		mid = (low + high) / 2;
+		merge_sort(A, low, mid, C);
+		merge_sort(A, mid + 1, high, C);
+		merge(A, low, high, mid, C);
+	}
+}
+
+/*
+ф-ция считывает два массива
+принимает ссылки типа int* на два массива
+принимает размер первого и второго массива соответственно
+*/
+void cin_arrays(int* First_array, int* Second_array, int size_first_array, int size_second_array) {
+	for (int i = 0; i < size_first_array; i++) {
+		cin >> First_array[i];
+	}
+	for (int i = 0; i < size_second_array; i++) {
+		cin >> Second_array[i];
+	}
+}
+
+/*
+ф-ция сливает два массива в один без сортировки
+принимает
+массив куда сливаем
+первый массив
+второй массив
+размер первого
+размер второго
+*/
+void merge_arrays_in_one(int* Merge_array, int* First_array, int* Second_array, int size_first_array, int size_second_array) {
+	for (int i = 0; i < size_first_array; i++) {
+		Merge_array[i] = First_array[i];
+	}
+	for (int i = size_first_array; i <= size_first_array + size_second_array; i++) {
+		Merge_array[i] = Second_array[i - size_first_array];
+	}
+}
+/*
+ф-ция выводит массив.
+принимает массив и размер массива
+*/
+void cout_answer(int* Merge_array, int size) {
+	for (int i = 0; i < size; i++)
+	{
+		cout << Merge_array[i] << " ";
+	}
+}
+
+int main()
+{
+	int size_first_array;
+	int size_second_array;
+	cin >> size_first_array >> size_second_array;
+	int* First_array = new int[size_first_array];								// первый массив
+	int* Second_array = new int[size_second_array];								// второй массив
+	int* Merge_array = new int[size_first_array + size_second_array];			// массив состоящий элементов из первого и второго
+	int* Buffer_array = new int[size_first_array + size_second_array];			// буферный массив
+
+	cin_arrays(First_array, Second_array, size_first_array, size_second_array);
+
+	merge_arrays_in_one(Merge_array, First_array, Second_array, size_first_array, size_second_array);
+
+	merge_sort(Merge_array, 0, size_first_array + size_second_array - 1, Buffer_array);
+
+	cout_answer(Merge_array, size_first_array + size_second_array);
+
+	/*delete[]Buffer_array;
+	delete[]Merge_array;
+	delete[]First_array;
+	delete[]Second_array;*/
+	return 0;
+}

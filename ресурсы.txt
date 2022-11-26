@@ -1,0 +1,42 @@
+#include iostream
+using namespace std;
+typedef long long ll;
+
+ф-ция считает общую сумму очков
+принимает первым параметром массив очков за 1 элемент одного типа
+второй параметр это массив элементов из количества элементов каждого типа
+возвращает сумму всех очков. тип данных long long
+
+ll count_all_points(ll array_all_prices, ll  array_all_quanity, int size) {
+    ll sum = 0;
+    for (int i = 0; i  size; i++) {
+        sum += array_all_prices[i]  array_all_quanity[i];
+    }
+    return sum;
+}
+
+ф-ция считывает два массива. принимает ссылки на два массива типа int и их размер типа int
+
+void cin_array(ll first_array, llsecond_array, int size) {
+    for (int i = 0; i  size; i++) {
+        cin  first_array[i];
+        cin  second_array[i];
+    }
+}
+
+int main() {
+    ios_basesync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    int n;                                количество различных ресурсов в игре
+    cin  n;
+    ll array_all_prices = new ll[n] ;   массив содержащий все цены за каждый тип
+    ll array_all_quanity = new ll[n];  массив содержащий количество каждого типа 
+    
+    cin_array(array_all_prices, array_all_quanity, n);
+    cout  count_all_points(array_all_prices, array_all_quanity, n);
+    return 0;
+}
+
+
+

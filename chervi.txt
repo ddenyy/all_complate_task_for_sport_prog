@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+
+int bin_search(int* A, int size, int key) {
+	int l = 0;
+	int r = size - 1;
+	while (r - l > 1) {
+		int mid = l + (r - l) / 2;
+		if (A[mid] > key) {
+			r = mid;
+		}
+		else {
+			l = mid;
+		}
+	}
+	if (A[l] == key) {
+		return l;
+	}
+	else {
+		return r;
+	}
+}
+
+
+
+int main() {
+	
+	int n;
+	cin >> n;
+	int* A = new int[n];
+	for (int i = 0; i < n; i++) {
+		cin >> A[i];
+	}
+
+	int m;
+	cin >> m;
+	int* M = new int[m];
+
+	for (int i = 0; i < m; i++) {
+		cin >> M[i];
+	}
+
+	int size_pr_sum = n + 1;
+	int* pr_sum = new int[size_pr_sum];
+	pr_sum[0] = 0;
+
+	for (int i = 1; i < n + 1; i++) {
+		pr_sum[i] = A[i - 1] + pr_sum[i - 1];
+	}
+
+	//for (int i = 0; i < n + 1; i++) {
+	//	cout << pr_sum[i] << ' ';
+	//}
+
+	for (int i = 0; i < m; i++) {
+		cout << bin_search(pr_sum, size_pr_sum, M[i]) << '\n';
+	}
+}

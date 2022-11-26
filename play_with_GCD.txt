@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+int gcd(int a, int b) {
+	if (b == 0) {
+		return a;
+	}
+	else {
+		return gcd(b, a % b);
+	}
+}
+
+
+int main() {
+	int a;
+	int b;
+	int n;
+	cin >> a >> b >> n;
+	bool flag = true;
+	bool cur_hod = true;
+
+	while (n >= gcd(n, a) || n >= gcd(n,b)) {
+		if (n >= gcd(n, a)) {
+			n -= gcd(n, a);
+			cur_hod = true;
+		}
+		if (n >= gcd(n, b)) {
+			n -= gcd(n, b);
+			cur_hod = false;
+		}
+	}
+	cout << !cur_hod << '\n';
+	
+	
+
+}

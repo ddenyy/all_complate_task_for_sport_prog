@@ -1,0 +1,93 @@
+#include <iostream>
+using namespace std;
+
+
+/*
+ф-ция принимает ссылку на массив широт и размер массива широт
+возвращает сумму всех широт
+*/
+int sum_all_width(int* array_width, int size) {
+    int sum_width = 0;
+    for (int i = 0; i < size; i++) {
+        sum_width += array_width[i];
+    }
+    return sum_width;
+}
+/*
+ф-ция находит максимальную и предмаксимальную высоту.
+принимает ссылку на массив высот, размер массива высот
+возвращает массив из двух элементов
+первый элемент масимальная высота
+второй элемент предмаксимальная высота
+*/
+int* find_two_max_height(int* array_height, int size) {
+    int size_array_of_height = 1;
+    int* array_of_height = new int[size_array_of_height];
+    int sum_width = 0;
+    int max_height = 0;
+    int before_max_height = 0;
+    for (int i = 0; i < size; i++) {
+        if (array_height[i] > max_height) {
+            before_max_height = max_height;
+            max_height = array_height[i];
+        }
+        else if (array_height[i] > before_max_height) {
+            before_max_height = array_height[i];
+        }
+    }
+
+    array_of_height[0] = max_height;
+    array_of_height[1] = before_max_height;
+
+    return array_of_height;
+    delete[] array_of_height;
+}
+
+/*
+ф-ция считывает два массива
+принимает две ссылки и размер массивов
+*/
+void cin_arrays(int* array_width, int* array_height, int n) {
+    for (int i = 0; i < n; i++) {
+        cin >> array_width[i];
+        cin >> array_height[i];
+    }
+}
+
+/*
+ф-ция принимает ссылку типом int на массивы ширины и высоты и длинну массивов типа int
+выводит ответ на задачу
+*/
+void cout_square_all_without_one(int* array_width, int* array_height, int size) {
+    int* max_and_before_max_height = find_two_max_height(array_height, size);
+
+    int max_height = max_and_before_max_height[0];
+    int before_max_heigth = max_and_before_max_height[1];
+    int sum_width = sum_all_width(array_width, size);
+
+    for (int i = 0; i < size; i++) {
+        if (array_height[i] != max_height) {
+            cout << (sum_width - array_width[i]) * max_height << ' ';
+        }
+        else {
+            cout << (sum_width - array_width[i]) * before_max_heigth << ' ';
+        }
+    }
+}
+
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    int n;                                                   // количество друзей
+    cin >> n;
+    int* array_height = new int[n];
+    int* array_width = new int[n];
+    cin_arrays(array_width, array_height, n);
+    cout_square_all_without_one(array_width, array_height, n);
+    delete[]array_height;
+    delete[]array_width;
+    return 0;
+}
+

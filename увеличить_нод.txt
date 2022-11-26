@@ -1,0 +1,82 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+/*
+ф-ция считывает массив
+принимает ссылку на массив и его размер
+*/
+void cin_array(int* Array, int size) {
+	for (int i = 0; i < size; i++) {
+		cin >> Array[i];
+	}
+}
+
+/*
+ф-ция инициализирует массив простых чисел
+принимает ссылку на массив простых чисел и размер простых чисел 
+*/
+void initialize_array_simple_number(int* array_simple, int size) {
+	for (int i = 0; i < 15000000; i++) {	// инициализируем элементы массива простых делителей нулями
+		array_simple[i] = 0;
+	}
+}
+
+/*
+ф-ция заполняет массив простых чисел.
+принимает исходный массив, массив простых чисел и размер массива исходного
+записывает на позицию i (где i простой делитель)
+количество сколько раз встретился этот делитель в каждом числе (по 1 разу)
+*/
+void fill_array_simple(int* A, int* array_simple, int n) {
+	for (int j = 0; j < n; j++) {
+		for (int i = 2; i * i <= A[j]; i++) {
+			bool flag = true;
+			while (A[j] % i == 0) {
+				if (flag) {
+					array_simple[i] += 1;
+					flag = false;
+				}
+				A[j] /= i;
+			}
+		}
+		array_simple[A[j]] += 1;
+	}
+}
+
+/*
+ф-ция находит какой делитель чаще всего встречался
+принимает ссылку на массив простых чисел и размер простых чисел
+возвращает количество сколько раз этот делитель встретился
+*/
+int find_most_frequent_divisor(int* array_simple, int n) {
+	int max = 0;
+	for (int i = 2; i < 15000000; i++) {
+		if (array_simple[i] > max) {
+			max = array_simple[i];
+		}
+	}
+	return max;
+}
+/*
+ф-ция выводит ответ на задачу
+*/
+void cout_answer(int n, int max) {
+	cout << n - max;
+}
+
+int main() {	
+	ios_base::sync_with_stdio(0);					// ускорение чтения данных
+	cin.tie(0);										// ускорение чтения данных
+	cout.tie(0);									// ускорение чтения данных
+	int n;
+	cin >> n;
+	int* A = new int[n];							// массив целых чисел
+	int size_array_simple = 15000000;				// размер массива простых делителей
+	int* array_simple = new int[size_array_simple];	// массив простых делителей на которые можно разложить число (из входных данных)
+	cin_array(A, n);
+	initialize_array_simple_number(array_simple, size_array_simple);
+	fill_array_simple(A, array_simple, n);
+	int max = find_most_frequent_divisor(array_simple, n);
+	cout_answer(n, max);
+}

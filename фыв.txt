@@ -1,0 +1,66 @@
+#include <iostream>
+using namespace std;
+
+/*
+ф-ция записывает массив
+принимает ссылку на массив типа int 
+и размер массива
+*/
+void cin_array(int* array, int size) {
+	for (int j = 0; j < size; j++) {
+		cin >> array[j];
+	}
+}
+/*
+ф-ция преобразует последовательность в возрастающую если это возможно
+принимает ссылку на массив типа int, размер массива, ссылку на количество действий деления
+*/
+void transform_row_to_increasing(int*array, int size, int* count_devide) { 
+	for (int k = size - 2; k >= 0; k--) {
+		while (array[k] >= array[k + 1] && array[k] != 0) {
+			array[k] /= 2;
+			*count_devide += 1;
+		}
+	}
+}
+
+bool check_row_to_increasing(int*array, int size) {
+	for (int l = 0; l < size - 1; l++) {
+		if (array[l] >= array[l + 1]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/*
+ф-ция выводит ответ на задачу. количество минимальных действий деления
+или -1 если преобразовать последовательность в возрастающую нельзя
+принимает ссылку на массив int, размер массива int, количество действий деления
+*/
+void cout_answer(int*array, int size, int count_devide) {
+	if (check_row_to_increasing(array, size) == true) {
+		cout << count_devide << '\n';
+	}
+	else {
+		cout << -1 << '\n';
+	}
+}
+
+
+int main() {
+	int count_tests;
+	cin >> count_tests;
+
+	for (int i = 0; i < count_tests; i++) {
+		int size_array;
+		int count_devide = 0;
+		cin >> size_array;
+		int* array = new int[size_array];
+		cin_array(array, size_array);
+		transform_row_to_increasing(array, size_array, &count_devide);
+		cout_answer(array, size_array, count_devide);
+    	delete[] array;
+	}
+	return 0;
+}

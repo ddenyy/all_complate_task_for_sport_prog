@@ -1,0 +1,244 @@
+#include<iostream>
+using namespace std;
+
+struct comparison_and_assignment
+{
+	int count_comparision;
+	int count_assignment;
+};
+
+
+void cin_array(int* array, int size) {
+	for (int i = 0; i < size; i++) {
+		cin >> array[i];
+	}
+}
+
+void cout_array(int* array, int size) {
+	for (int i = 0; i < size; i++) {
+		cout << array[i] << ' ';
+	}
+}
+
+
+comparison_and_assignment shaker_sort(int* array, int size) {
+	int* array_shaker = new int[size];
+	for (int i = 0; i < size; i++) {
+		array_shaker[i] = array[i];
+	}
+	comparison_and_assignment asnwer;
+	int count_comparision = 0;				// число операций сравнения
+	int count_assignment = 0;	
+	int last_swap;// число операций присвоения
+	bool sort_or_not = true;
+	int right = size; // n - размер массива
+	int left = 0;
+	/*do {
+		bool sort_or_not = true;
+		for (int i = left; i <= right; i++) {
+			count_comparision += 1;
+			if (array_shaker[i - 1] > array_shaker[i]) {
+				int buffer = array_shaker[i - 1];
+				array_shaker[i - 1] = array_shaker[i];
+				array_shaker[i] = buffer;
+				count_assignment += 3;
+				sort_or_not = false;
+			}
+		}
+		right--;
+		for (int i = right; i >= left; i--) {
+			count_comparision += 1;
+			if (array_shaker[i] < array_shaker[i - 1]) {
+				int buffer = array_shaker[i - 1];
+				array_shaker[i - 1] = array_shaker[i];
+				array_shaker[i] = buffer;
+				count_assignment += 3;
+				sort_or_not = false;
+			}
+		}
+		left++;
+	} while (sort_or_not == false);*/
+	/*while (sort_or_not) {
+		sort_or_not = false;
+		for (int i = left; i < right; i++) {
+			count_comparision += 1;
+			if (array_shaker[i - 1] > array_shaker[i]) {
+				int buffer = array_shaker[i - 1];
+				array_shaker[i - 1] = array_shaker[i];
+				array_shaker[i] = buffer;
+				count_assignment += 3;
+				sort_or_not = true;
+			}
+		}
+		right--;
+		if (!sort_or_not) break;
+		for (int i = right; i > left; i--) {
+			count_comparision += 1;
+			if (array_shaker[i - 1] > array_shaker[i]) {
+				int buffer = array_shaker[i - 1];
+				array_shaker[i - 1] = array_shaker[i];
+				array_shaker[i] = buffer;
+				count_assignment += 3;
+				sort_or_not = true;
+			}
+		}
+		left++;
+		
+		
+	}*/
+	while (left < right) {
+		last_swap = 0;
+		count_comparision++;
+		for (int i = left; i < right; i++) {
+			if (array[i] > array[i + 1]) {
+				int buffer = array[i];
+				array[i] = array[i + 1];
+				array[i + 1] = buffer;
+				last_swap = i;
+				count_assignment += 4;
+
+			}
+		}
+		right = last_swap;
+		count_comparision++;
+		for (int j = right; j > left; j--) {
+			if (array[j] < array[j - 1]) {
+				int buffer = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = buffer;
+				last_swap = j;
+				count_assignment += 4;
+			}
+		}
+		left = last_swap;
+	}
+	asnwer.count_comparision = count_comparision;
+	asnwer.count_assignment = count_assignment;
+	delete[] array_shaker;
+	return asnwer;
+}
+
+
+comparison_and_assignment buble_sort_updated(int* array, int size) {
+	int* array_buble = new int[size];
+	for (int i = 0; i < size; i++) {
+		array_buble[i] = array[i];
+	}
+	comparison_and_assignment asnwer;
+	int count_comparision = 0;				// число операций сравнения
+	int count_assignment = 0;				// число операций присвоения
+	for (int i = size - 1; i > 0; i--) {
+		bool flag = true;
+		for (int j = 0; j < i; j++) {
+			count_comparision += 1;
+			if (array_buble[j] > array_buble[j + 1]) {
+				flag = false;
+				int buffer = array_buble[j];
+				array_buble[j] = array_buble[j + 1];
+				array_buble[j + 1] = buffer;
+				count_assignment += 3;
+			}
+		}
+		if (flag) {
+			break;
+		}
+	}
+	asnwer.count_comparision = count_comparision;
+	asnwer.count_assignment = count_assignment;
+	delete[] array_buble;
+	return asnwer;
+}
+
+/*
+сортировка пузырьком обычная
+*/
+comparison_and_assignment buble_sort(int* array, int size) {
+	int* array_buble = new int[size];
+	for (int i = 0; i < size; i++) {
+		array_buble[i] = array[i];
+	}
+	comparison_and_assignment asnwer;
+	int count_comparision = 0;				// число операций сравнения
+	int count_assignment = 0;				// число операций присвоения
+	for (int i = size - 1; i > 0; i--) {
+		for (int j = 0; j < i; j++) {
+			count_comparision += 1;
+			if (array_buble[j] > array_buble[j + 1]) {
+				int buffer = array_buble[j];
+				array_buble[j] = array_buble[j + 1];
+				array_buble[j + 1] = buffer;
+				count_assignment += 3;
+			}
+		}
+	}
+	asnwer.count_comparision = count_comparision;
+	asnwer.count_assignment = count_assignment;
+	delete[] array_buble;
+	return asnwer;
+}
+
+/*
+сортировка вставками
+*/
+comparison_and_assignment insert_sort(int* A, int size) {
+	int* array_insert = new int[size];
+	int j, tmp;
+	for (int i = 0; i < size; i++) {
+		array_insert[i] = A[i];
+	}
+	comparison_and_assignment asnwer;
+	int count_comparision = 0;				// число операций сравнения
+	int count_assignment = 0;				// число операций присвоения
+	for (int i = 1; i < size; i++) {
+		count_comparision++;
+		if (array_insert[i] < array_insert[i - 1]) {
+			j = i;
+			tmp = array_insert[i];
+			count_assignment++;
+			while (j > 0) {
+				count_comparision++;
+				if (array_insert[j - 1] <= tmp) {
+					break;
+				}
+				array_insert[j] = array_insert[j - 1];
+				count_assignment++;
+				j--;
+			}
+			array_insert[j] = tmp;
+			count_assignment++;
+		}
+	}
+	
+	asnwer.count_comparision = count_comparision;
+	asnwer.count_assignment = count_assignment;
+	delete[] array_insert;
+	return asnwer;
+}
+
+int main()
+{
+	int size_array;
+	cin >> size_array;
+	comparison_and_assignment cout_comparison_and_assignment_for_buble_sort;
+	comparison_and_assignment cout_comparison_and_assignment_for_buble_sort_updated;
+	comparison_and_assignment cout_comparison_and_assignment_for_shaker_sort;
+	comparison_and_assignment cout_comparison_and_assignment_for_insert_sort;
+	int* array = new int[size_array];
+	cin_array(array, size_array);
+
+	cout_comparison_and_assignment_for_buble_sort = buble_sort(array, size_array);
+	cout << "buble " << cout_comparison_and_assignment_for_buble_sort.count_comparision << ' ' << cout_comparison_and_assignment_for_buble_sort.count_assignment << "\n";
+
+	cout_comparison_and_assignment_for_buble_sort_updated = buble_sort_updated(array, size_array);
+	cout << "buble_update " << cout_comparison_and_assignment_for_buble_sort_updated.count_comparision << ' ' << cout_comparison_and_assignment_for_buble_sort_updated.count_assignment << "\n";
+
+	cout_comparison_and_assignment_for_shaker_sort = shaker_sort(array, size_array);
+	cout << "shaker " << cout_comparison_and_assignment_for_shaker_sort.count_comparision << ' ' << cout_comparison_and_assignment_for_shaker_sort.count_assignment << "\n";
+
+	cout_comparison_and_assignment_for_insert_sort = insert_sort(array, size_array);
+	cout << "insert " << cout_comparison_and_assignment_for_insert_sort.count_comparision << ' ' << cout_comparison_and_assignment_for_insert_sort.count_assignment << "\n";
+
+	cout_array(array, size_array);
+	return 0;
+}
+
