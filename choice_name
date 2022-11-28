@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+#define all(x) x.begin(),x.end()
+
+void input_arr(vector<string>& Array, int size) {
+	for (int i = 0; i < size; i++) {
+		cin >> Array[i];
+	}
+}
+
+void input_sizes(int& size_name_like_him, int& size_name_like_her, int& size_name_dis_like_him, int& size_name_dis_like_her) {
+	cin >> size_name_like_him >> size_name_like_her >> size_name_dis_like_him >> size_name_dis_like_her;
+}
+
+void output_answer(vector<string>& Answer) {
+	if (Answer.size() != 0) {
+		cout << Answer[0] << '\n';
+		for (int i = 1; i < Answer.size(); i++) {
+			if (Answer[i - 1] != Answer[i])
+				cout << Answer[i] << '\n';
+		}
+	}
+}
+
+// ф-ция ищет пересечение множеств имён которые нравятся и ей и ему
+void find_intersection
+(
+	vector<string>& Like_him,
+	vector<string>& Like_her,
+	vector<string>& Dis_Like_her,
+	vector<string>& Dis_Like_him,
+	vector<string>& Answer,
+	int size_name_like_him
+) 
+{
+	for (int i = 0; i < size_name_like_him; i++) {
+		if (!binary_search(all(Dis_Like_her), Like_him[i]) && !binary_search(all(Dis_Like_him), Like_him[i])) {
+			if (binary_search(all(Like_her), Like_him[i])) {
+				Answer.push_back(Like_him[i]);
+			}
+		}
+	}
+}
+
+int main() {
+	// размеры списков имён которые нравятся и не нравятся ему и ей соответственно
+	int size_name_like_him, size_name_like_her, size_name_dis_like_him, size_name_dis_like_her;
+	input_sizes(size_name_like_him, size_name_like_her, size_name_dis_like_him, size_name_dis_like_her);
+
+	vector<string> Like_him(size_name_like_him);
+	vector<string> Like_her(size_name_like_her);
+	vector<string> Dis_Like_him(size_name_dis_like_him);
+	vector<string> Dis_Like_her(size_name_dis_like_her);
+	vector<string> Answer;
+
+	input_arr(Like_him, size_name_like_him);
+	input_arr(Like_her, size_name_like_her);
+	input_arr(Dis_Like_him, size_name_dis_like_him);
+	input_arr(Dis_Like_her, size_name_dis_like_her);
+
+	sort(all(Dis_Like_him));
+	sort(all(Dis_Like_her));
+	sort(all(Like_her));
+	sort(all(Like_him));
+
+	find_intersection(Like_him, Like_her, Dis_Like_her, Dis_Like_him, Answer, size_name_like_him);
+
+	sort(all(Answer));
+	output_answer(Answer);
+	Like_him.clear();
+	Like_her.clear();
+	Dis_Like_him.clear();
+	Dis_Like_her.clear();
+	Answer.clear();
+	return 0;
+}
