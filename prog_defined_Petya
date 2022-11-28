@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <fstream>
+using namespace std;
+#define ll long long
+
+
+void input_size_face(int& size_row, int& size_column, ifstream& fin) {
+	fin >> size_row >> size_column;
+}
+
+void input_face(vector<vector<char>>& A, ifstream& fin, int size_row, int size_column) {
+	for (int i = 0; i < size_row; i++) {
+		for (int j = 0; j < size_column; j++) {
+			fin >> A[i][j];
+		}
+	}
+}
+
+void count_horizontally(vector<vector<char>>& A, int size_row, int size_column, int& count) {
+	for (int i = 0; i < size_row; i++) {
+		for (int j = 0; j < size_column - 1; j++) {
+			if (A[i][j] == A[i][j + 1] && A[i][j] == '.') {
+				count++;
+			}
+		}
+	}
+}
+
+void count_vertically(vector<vector<char>>& A, int size_row, int size_column, int& count) {
+	for (int i = 0; i < size_row - 1; i++) {
+		for (int j = 0; j < size_column; j++) {
+			if (A[i][j] == A[i + 1][j] && A[i][j] == '.') {
+				count++;
+			}
+		}
+	}
+}
+
+int main() {
+	int size_row, size_column;
+	int count = 0;
+	ifstream fin;
+	ofstream fout;
+
+	fin.open("input.txt");
+	input_size_face(size_row, size_column, fin);
+	vector<vector<char>> Array_Face(size_row, vector<char>(size_column));
+	input_face(Array_Face, fin, size_row, size_column);
+	fin.close();
+
+	count_horizontally(Array_Face, size_row, size_column, count);
+	count_vertically(Array_Face, size_row, size_column, count);
+
+	fout.open("output.txt");
+	fout << count;
+	fout.close();
+	
+	Array_Face.clear();
+
+	return 0;
+}
