@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <set>
+using namespace std;
+#define all(x) x.begin(),x.end()
+
+
+void input_arr(vector<string>& Arr_words, int size) {
+	for (int i = 0; i < size; i++) {
+		cin >> Arr_words[i];
+	}
+}
+
+bool find_char(string& str, char symbol) {
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == symbol) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool find_string(vector<string>& Arr_roots, string  str) {
+		for (int i = 0; i < Arr_roots.size(); i++) {
+			if (Arr_roots[i] == str) {
+				return true;
+			}
+		}
+		return false;
+}
+
+void find_root(string& curr_str, string& root_str) {
+	for (int j = 0; j < curr_str.size(); j++) {
+		if (!find_char(root_str, curr_str[j])) {
+			root_str += curr_str[j];
+		}
+	}
+}
+
+void output_answer(int answer) {
+	cout << answer;
+}
+
+int main() {
+	int quantity_words; 
+	cin >> quantity_words;
+	vector<string> Arr_words(quantity_words);
+	vector<string> Answer;
+	input_arr(Arr_words, quantity_words);
+	
+	for (int i = 0; i < quantity_words; i++) {
+		string curr_str = Arr_words[i];
+		string root_str = "";
+		sort(all(curr_str));
+		find_root(curr_str, root_str);
+		sort(all(root_str));
+		if (!find_string(Answer, root_str)) {
+			Answer.push_back(root_str);
+		}
+		curr_str.clear();
+		root_str.clear();
+	}
+	output_answer(Answer.size());
+	Arr_words.clear();
+	Answer.clear();
+	
+}
