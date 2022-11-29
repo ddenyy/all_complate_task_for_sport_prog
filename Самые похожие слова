@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+#define all(x) x.begin(),x.end()
+
+
+void input_arr(vector<string>& Arr_words, int size) {
+	for (int i = 1; i <= size; i++) {
+		cin >> Arr_words[i];
+	}
+}
+
+int find_minimum_sum(vector<string>& Arr_words, int size_arr, int size_str) {
+	int min_sum = 10000000000;
+	for (int i = 1; i <= size_arr; i++) {
+		for (int j = i + 1; j <= size_arr; j++) {
+			int sum = 0;
+			for (int k = 0; k < size_str; k++) {
+				sum += abs(Arr_words[i][k] - Arr_words[j][k]);
+			}
+			min_sum = min(min_sum, sum);
+		}
+	}
+	return min_sum;
+}
+
+int main() {
+	int quantity_tests;
+	int size_arr, size_str;
+	cin >> quantity_tests;
+	
+	while (quantity_tests--) {
+		cin >> size_arr >> size_str;
+		vector<string> Arr_words(size_arr + 1);
+		input_arr(Arr_words, size_arr);
+		cout << find_minimum_sum(Arr_words, size_arr, size_str) << '\n';
+		Arr_words.clear();
+	}
+	return 0;
+	
+}
