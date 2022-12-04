@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+#define all(x) x.begin(),x.end()
+
+void input_table(vector<vector<int> >& Table_points, int& quantity_sports, int& quantity_try) {
+	for (int i = 0; i < quantity_sports; i++) {
+		for (int j = 0; j < quantity_try; j++) {
+			cin >> Table_points[i][j];
+		}
+	}
+}
+
+void calc_sum_points(vector<vector<int> >& Table_points, int& quantity_sports, int& quantity_try, vector<int>& Sum_points) {
+	for (int i = 0; i < quantity_sports; i++) {
+		for (int j = 0; j < quantity_try; j++) {
+			Sum_points[i] += Table_points[i][j];
+		}
+	}
+}
+
+void find_max_point_for_try(pair<int, int>& Winner, vector<vector<int> >& Table_points, int& quantity_sports, int& quantity_try) {
+	for (int i = 0; i < quantity_sports; i++) {
+		for (int j = 0; j < quantity_try; j++) {
+			if (Table_points[i][j] > Winner.first) {
+				Winner.first = Table_points[i][j];
+				Winner.second = i;
+			}
+		}
+	}
+}
+
+void find_winner(pair<int, int>& Winner, vector<vector<int> >& Table_points, vector<int>& Sum_points, int& quantity_sports, int& quantity_try) {
+	for (int i = 0; i < quantity_sports; i++) {
+		for (int j = 0; j < quantity_try; j++) {
+			if (Table_points[i][j] == Winner.first) {
+				if (Sum_points[i] > Sum_points[Winner.second]) {
+					Winner.first = Table_points[i][j];
+					Winner.second = i;
+				}
+			}
+		}
+	}
+}
+
+void clear_vector_two_dimensional(vector<vector<int> >& Table_points) {
+	for (int i = 0; i < Table_points.size(); i++) {
+		Table_points[i].clear();
+	}
+	Table_points.clear();
+}
+
+
+int main() {
+	int quantity_sports, quantity_try;
+	cin >> quantity_sports >> quantity_try;
+	vector<vector<int> > Table_points(quantity_sports, vector<int> (quantity_try));
+	vector<int> Sum_points(quantity_sports);
+	int max_points = 0;
+	// пара в которой первая позиция максимальное количество очков. вторая позиция это номер спортсмена
+	pair<int, int> Winner(-1, 0);
+
+	input_table(Table_points, quantity_sports, quantity_try);
+	calc_sum_points(Table_points, quantity_sports, quantity_try, Sum_points);
+	find_max_point_for_try(Winner, Table_points, quantity_sports, quantity_try);
+	find_winner(Winner, Table_points, Sum_points, quantity_sports, quantity_try);
+	cout << Winner.second + 1;
+
+	clear_vector_two_dimensional(Table_points);
+	Sum_points.clear();
+}
+
+
+
+
