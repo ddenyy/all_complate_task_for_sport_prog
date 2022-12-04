@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+#include <string>
+using namespace std;
+#define all(x) x.begin(),x.end()
+
+
+void clear_vector_two_dimensional(vector<vector<int> >& Table_points) {
+	for (int i = 0; i < Table_points.size(); i++) {
+		Table_points[i].clear();
+	}
+	Table_points.clear();
+}
+
+void delete_user_squares(ifstream& in, vector<vector<int>>& Main_square, int size_square, int quantity_deletion_squares) {
+	int x, y, a;
+	for (int k = 0; k < quantity_deletion_squares; k++) {
+		in >> x >> y >> a;
+		for (int i = x; i < x + a; i++) {
+			for (int j = y; j < y + a; j++) {
+				if (i < size_square && j < size_square) {
+					Main_square[i][j] = 0;
+				}
+			}
+		}
+	}
+}
+
+void count_area_main_square(vector<vector<int>>& Main_square, int size_square, int& answer) {
+	for (int i = 0; i < size_square; i++) {
+		for (int j = 0; j < size_square; j++) {
+			answer += Main_square[i][j];
+		}
+	}
+}
+
+
+int main() {
+	ifstream in("input.txt");
+	ofstream out("output.txt");
+	int size_square;
+	int quantity_deletion_squares;
+	int answer = 0;
+	in >> size_square;
+	in >> quantity_deletion_squares;
+	vector<vector<int>> Main_square((size_square), vector<int>(size_square, 1));
+
+	delete_user_squares(in, Main_square, size_square, quantity_deletion_squares);
+	count_area_main_square(Main_square, size_square, answer);
+
+	in.close();
+	out << answer;
+	cout << answer;
+	out.close();
+	clear_vector_two_dimensional(Main_square);
+
+}
+
+
+
+
