@@ -1,0 +1,121 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+#include <string>
+using namespace std;
+#define all(x) x.begin(),x.end()
+
+
+void clear_vector_two_dimensional(vector<vector<int> >& Table_points) {
+	for (int i = 0; i < Table_points.size(); i++) {
+		Table_points[i].clear();
+	}
+	Table_points.clear();
+}
+
+// проверка соответствия матриц А и В
+bool check_table(vector<vector<int>>& A, vector<vector<int>>& B, int n) {
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (A[i][j] != B[i][j]) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+// заполняем строку ответа минимальными элементами каждой строки
+void min_elem(vector<vector<int>>& A, vector<int>& answer_row) {
+	for (int i = 0; i < A.size(); i++) {
+		int minim = 1000000;
+		for (int j = 0; j < A.size(); j++) {
+			if (i != j) {
+				if (minim > A[i][j]) {
+					minim = A[i][j];
+				}
+			}
+		}
+		answer_row[i] = minim;
+	}
+}
+
+// проверка что строка ответа не состоит из одних нулей
+bool check_zero_row(vector<int>& answer_row) {
+	bool flag_zero = false;
+	for (int i = 0; i < answer_row.size(); i++) {
+		if (answer_row[i] != 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// ф-ция ввода матрицы
+void input_matrix(vector<vector<int>>& Matrix, int size_matrix) {
+	for (int i = 0; i < size_matrix; i++) {
+		for (int j = 0; j < size_matrix; j++) {
+			cin >> Matrix[i][j];
+		}
+	}
+}
+
+// строит матрицу на основе элементов answer_row
+void build_matrix(vector<vector<int>>& Matrix_Built, int size_matrix, vector<int>& answer_row) {
+	for (int i = 0; i < size_matrix; i++) {
+		for (int j = 0; j < size_matrix; j++) {
+			if (i == j) {
+				Matrix_Built[i][j] = 0;
+			}
+			else {
+				Matrix_Built[i][j] = max(answer_row[i], answer_row[j]);
+			}
+		}
+	}
+}
+
+void output_answer(vector<int>& answer_row, int size_matrix, bool flag_ans) {
+	if (flag_ans) {
+		if (check_zero_row(answer_row)) {
+			for (int i = 0; i < size_matrix; i++) {
+				cout << answer_row[i] << ' ';
+			}
+		}
+		else {
+			cout << -1;
+		}
+	}
+	else {
+		cout << -1;
+	}
+}
+
+int main() {
+	int size_matrix;
+	// отвечает за эквивалентность матриц А и В которую мы построили
+	bool flag_ans = true;
+	cin >> size_matrix;
+
+	// исходная матрица
+	vector<vector<int>> Matrix(size_matrix, vector<int>(size_matrix));
+	// матрицу которую мы строим по данным из answer_row
+	vector<vector<int>> Matrix_Built(size_matrix, vector<int>(size_matrix));
+	// строка которая хранит ответ
+	vector<int> answer_row(size_matrix, 1000000000);
+
+	input_matrix(Matrix, size_matrix);
+	min_elem(Matrix, answer_row);
+	build_matrix(Matrix_Built, size_matrix, answer_row);
+	flag_ans = check_table(Matrix, Matrix_Built, size_matrix);
+	output_answer(answer_row, size_matrix, flag_ans);
+
+	clear_vector_two_dimensional(Matrix);
+	clear_vector_two_dimensional(Matrix_Built);
+	answer_row.clear();
+	return 0;
+}
+
+
+
+
