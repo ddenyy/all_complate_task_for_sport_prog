@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <set>
+#include <cmath>
+using namespace std;
+#define all(x) x.begin(), x.end()
+typedef long long ll;
+
+int main()
+{
+    ifstream file_in;
+    file_in.open("input.txt");
+    int n;
+    file_in >> n;
+    vector<ll> A(n);
+    for (int i = 0; i < n; i++) {
+        char item;
+        file_in >> item;
+        if (item == 'a') {
+            A[i] = 1;
+        }
+        else {
+            A[i] = -1;
+        }
+    }
+    
+    vector<ll>PrSum(n + 1);
+    PrSum[0] = 0;
+    for (int i = 0; i < n; i++) {
+        PrSum[i + 1] = PrSum[i] + A[i];
+    }
+    sort(all(PrSum));
+    ll k = 0;
+    ll ans = 0;
+    for (int i = 1; i <= n; i++) {
+        if (PrSum[i] == PrSum[i - 1]) {
+            k++;
+            
+        }
+        else {
+            ans += ((k * (k + 1)) / 2);
+          
+            k = 0;
+        }
+    }
+    ans += (k * (k + 1) / 2);
+    cout << ans;
+
+}
