@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <set>
+#include <cmath>
+using namespace std;
+#define all(x) x.begin(), x.end()
+
+
+int main()
+{
+    
+    /*int n;
+    cin >> n;
+    vector<int> A(n);
+    for (int i = 0; i < n; i++) {
+        cin >> A[i];
+    }
+    vector<int>PrSum(n + 1);
+    PrSum[0] = 0;
+    for (int i = 0; i < n; i++) {
+        PrSum[i + 1] = PrSum[i] + A[i];
+    }*/
+    
+
+    ifstream file_in;
+    file_in.open("input.txt");
+
+    int n, m;
+    file_in >> n >> m;
+    vector<vector<int>> A(n, vector<int>(m));
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            file_in >> A[i][j];
+        }
+    }
+    /*for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cout << A[i][j] << ' ';
+        }
+        cout << '\n';
+    }
+    cout << '\n';*/
+  
+
+    vector<vector<long long>> PrSum(n + 1, vector<long long>(m + 1, 0));
+    PrSum[1][1] = A[0][0];
+    for (int i = 2; i < m+1; i++)
+        PrSum[1][i] = PrSum[0][i - 1] + A[0][i-1];
+    for (int i = 2; i < n+1; i++)
+        PrSum[i][1] = PrSum[i - 1][0] + A[i-1][0];
+
+    for (int i = 1; i < n+1; i++) {
+        for (int j = 1; j < m+1; j++) {
+            PrSum[i][j] = PrSum[i - 1][j] + PrSum[i][j - 1] - PrSum[i - 1][j - 1] + A[i-1][j-1];
+        }
+    }
+    long long ans = -1000000000000000;
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <= m; j++) {
+            cout << PrSum[i][j] << ' ';
+        }
+        cout << '\n';
+    }
+
+    for (int i1 = 0; i1 < n+1; i1++) {
+        for (int j1 = 0; j1 < m+1; j1++) {
+            for (int i2 = 0; i2 < i1; i2++) {
+                for (int j2 = 0; j2 < j1; j2++) {
+                    long long summa = PrSum[i1][j1] - PrSum[i1][j2] - PrSum[i2][j1] + PrSum[i2][j2];
+                   
+                    ans = max(ans, summa);
+
+                }
+            }
+        }
+    }
+    cout << ans;
+
+
+}
