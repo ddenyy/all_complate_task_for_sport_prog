@@ -1,0 +1,3 @@
+for (auto i = st.begin(); i != st.end(); ++i) {
+		cout << *i << ' ';
+	}
