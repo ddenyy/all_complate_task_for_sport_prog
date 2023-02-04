@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <set>
+#include <map>
+#include <cmath>
+using namespace std;
+#define all(x) x.begin(), x.end()
+typedef long long ll;
+
+
+int main() {
+
+	int t;
+	cin >> t;
+	
+	while (t--) {
+		int n;
+		cin >> n;
+		int item;
+		int minim = INT_MAX;
+		ll sum = 0;
+		ll countNegative = 0;
+		for (int i = 0; i < n; i++) {
+			cin >> item;
+			if (item < 0) {
+				countNegative++;
+			}
+			sum += abs(item);
+			minim = min(abs(item), minim);
+		}
+		if (countNegative % 2) {
+			sum -= minim * 2;
+		}
+		cout << sum << '\n';
+
+	}
+
+	return 0;
+}
+
