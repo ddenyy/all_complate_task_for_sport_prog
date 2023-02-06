@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <iomanip>
+#include <map>
+#include <math.h>
+#include <fstream>
+using namespace std;
+typedef long long ll;
+#define all(x) x.begin(), x.end()
+
+double PI = 3.1415926535;
+
+struct point {
+	long double x, y;
+	point(long double x = 0, long double y = 0) : x(x), y(y) {};
+
+	point operator + (point B) {
+		point res;
+		res.x = x + B.x;
+		res.y = y + B.y;
+		return res;
+	}
+	point operator - (point B) {
+		point res;
+		res.x = x - B.x;
+		res.y = y - B.y;
+		return res;
+	}
+	point operator * (double k) {
+		point res;
+		res.x = x * k;
+		res.y = y * k;
+		return res;
+	}
+};
+
+double dist2(point A)
+{
+	return A.x * A.x + A.y * A.y;
+}
+
+double dot(point A, point B)
+{
+	return A.x * B.x + A.y * B.y;
+}
+
+double cross(point A, point B)
+{
+	return A.x * B.y - A.y * B.x;
+}
+
+
+
+int main()
+{
+	ifstream fin;
+	fin.open("angle1.in");
+	std::ofstream out;          // поток для записи
+	out.open("angle1.out");
+	point A;
+	point B(1, 0);
+	
+	fin >> A.x >> A.y;
+	long double ans = atan2(A.y, A.x);
+	if (ans < 0) {
+		ans += 2*PI;
+	}
+	out << fixed << setprecision(12) << ans;
+	
+}
+
