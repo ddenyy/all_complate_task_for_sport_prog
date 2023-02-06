@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <fstream>
+using namespace std;
+typedef long long ll;
+#define all(x) x.begin(), x.end()
+
+ll n;
+vector<ll> h1;
+vector<ll> h2;
+vector<ll> p1pow;
+vector<ll> p2pow;
+ll p1 = 277;
+ll p2 = 325;
+ll mod = 10e9 + 7;
+
+void precalcPowers() 
+{
+	p1pow[0] = 1;
+	p2pow[0] = 1;
+	for (int i = 1; i < n; i++) {
+		p1pow[i] = p1pow[i - 1] * p1;
+		p2pow[i] = p2pow[i - 1] * p2;
+	}
+}
+
+void precalcHashs(string s)
+{
+	h1[0] = (s[0] - 'a' + 1) % mod;
+	h2[0] = (s[0] - 'a' + 1) % mod;
+
+	for (int i = 1; i < n; i++)
+	{
+		h1[i] = h1[i - 1] * p1 % mod + (s[i] - 'a' + 1) % mod;
+		h2[i] = h2[i - 1] * p2 % mod + (s[i] - 'a' + 1) % mod;
+	}
+}
+
+pair<ll, ll> getHash(ll l, ll r)
+{
+	ll hash1 = h1[r] % mod;
+	ll hash2 = h2[r] % mod;
+	
+	if (l > 0)
+	{
+		hash1 = (hash1 - (p1pow[r - l + 1] * h1[l - 1] % mod) + mod) % mod;
+		hash2 = (hash2 - (p2pow[r - l + 1] * h2[l - 1] % mod) + mod) % mod;
+	}
+	return { hash1, hash2 };
+}
+
+pair<ll, ll> hash_substring(ll l, ll r) {
+	ll firstSubStrHash = (h1[r + 1] - h1[l]) * p1pow[n - l] % mod;
+	ll secondSubStrHash = (h2[r + 1] - h2[l]) * p2pow[n - l] % mod;
+	return { firstSubStrHash, secondSubStrHash };
+}
+
+void consoleOutVector(vector<ll> &A) {
+	for (int i = 0; i < A.size(); i++) {
+		cout << A[i] << ' ';
+	}
+}
+
+int main()
+{
+	string s;
+	cin >> s;
+	n = s.length();
+	h1.resize(n);
+	h2.resize(n);
+	p1pow.resize(n);
+	p2pow.resize(n);
+	
+	precalcPowers();
+	precalcHashs(s);
+	consoleOutVector(h1);
+	cout << '\n';
+	consoleOutVector(h2);
+}
