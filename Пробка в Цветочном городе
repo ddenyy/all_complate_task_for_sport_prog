@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <iomanip>
+#include <map>
+#include <math.h>
+#include <fstream>
+#include <stack>
+#include <queue>
+#include <deque>
+using namespace std;
+typedef long long ll;
+#define all(x) x.begin(), x.end()
+
+
+double PI = 3.1415926535;
+
+
+int main()
+{
+	
+	
+	queue<char>Queue_nord;
+	queue<char>Queue_south;
+	
+	string s_south;
+	string s_nord;
+	
+	cin >> s_nord;
+	cin >> s_south;
+	
+
+	for (int i = 0; i < s_south.size(); i++) {
+		Queue_south.push(s_south[i]);
+	}
+
+	for (int i = 0; i < s_nord.size(); i++) {
+		Queue_nord.push(s_nord[i]);
+	}
+
+	int time = 0;
+	while (!Queue_nord.empty() && !Queue_south.empty())
+	{
+		if (Queue_nord.front() != 'L' && Queue_south.front() != 'L')
+		{
+			time++;
+			Queue_nord.pop();
+			Queue_south.pop();
+		}
+		else
+		{
+			if (Queue_south.front() == 'L' && Queue_nord.front() != 'L')
+			{
+				time++;
+				Queue_nord.pop();
+			}
+			else
+			{
+				if (Queue_south.front() != 'L' && Queue_nord.front() == 'L')
+				{
+					time++;
+					Queue_south.pop();
+				}
+				else
+				{
+					time++;
+					Queue_south.pop();
+					Queue_nord.pop();
+				}
+			}
+		}
+	}
+
+	time += Queue_nord.size() + Queue_south.size();
+
+	cout << time << '\n';
+}
+
