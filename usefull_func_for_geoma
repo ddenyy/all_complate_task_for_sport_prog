@@ -53,20 +53,24 @@ struct line {
 
 };
 
+// квадрат длинны вектора A
 double dist2(point A)
 {
 	return A.x * A.x + A.y * A.y;
 }
 
+// скалярное произведение
 double dot(point A, point B)
 {
 	return A.x * B.x + A.y * B.y;
 }
 
+// векторное произведение
 double cross(point A, point B)
 {
 	return A.x * B.y - A.y * B.x;
 }
+
 
 double angle(double x1, double y1, double x2, double y2)
 {
@@ -76,6 +80,7 @@ double angle(double x1, double y1, double x2, double y2)
 	return acos(t);
 }
 
+// расстояние от точки до прямой
 double distLineAndPoint(line F, point K) {
 	point N;
 	N.x = F.A;
@@ -83,6 +88,7 @@ double distLineAndPoint(line F, point K) {
 	return abs(F.A * K.x + F.B * K.y + F.C) / sqrt(dist2(N));
 }
 
+// знак расположения точки относительно прямой
 int sign(line L, point p) {
 	double eps = 1e-8;
 	if (abs(L.A * p.x + L.B * p.y + L.C) > 0) {
@@ -93,6 +99,19 @@ int sign(line L, point p) {
 	}
 }
 
+// площадь выпуклого многоугольника
+double sq(vector<point>& fig)
+{
+	double res = 0;
+	for (unsigned i = 0; i < fig.size(); i++)
+	{
+		point
+			p1 = i ? fig[i - 1] : fig.back(),
+			p2 = fig[i];
+		res += (p1.x - p2.x) * (p1.y + p2.y);
+	}
+	return fabs(res) / 2;
+}
 
 int main()
 {
@@ -100,12 +119,8 @@ int main()
 	fin.open("point3.in");
 	ofstream out;          // поток для записи
 	out.open("point3.out");
-	point T, A, B;
-	line F;
-	fin >> T.x >> T.y >> A.x >> A.y >> B.x >> B.y;
-	point Vector;
-	Vector.x = B.x - A.x;
-	Vector.y = B.y - B.y;
+
+	
 
 }
 
