@@ -99,6 +99,36 @@ int sign(line L, point p) {
 	}
 }
 
+// расстояние от точки до луча
+double distance_from_point_and_ray(point A, point VA, point VB) {
+	point V = VB - VA;
+	line L(VB, VA);
+	double dist_lineL_point = distLineAndPoint(L, A);
+
+	if (dot(VB - VA, A - VA) > 0) {
+		return dist_lineL_point;
+	}
+	else {
+		return sqrt(dist2(VA - A));
+	}
+}
+
+// расстояние от точки А до отрезка [B,C]
+double distance_from_segment_point(point A, point B, point C) {
+
+	line F(B, C);
+	double minim2;
+	minim2 = min(dist2(A - C), dist2(A - B));
+
+	if (dot(A - C, B - C) >= 0 && dot(A - B, C - B) >= 0) {
+
+		return min(minim2, distLineAndPoint(F, A));
+	}
+	else if (dot(A - C, B - C) < 0 || dot(A - B, C - B) < 0) {
+		return sqrt(minim2);
+	}
+}
+
 // площадь выпуклого многоугольника
 double sq(vector<point>& fig)
 {
@@ -116,10 +146,14 @@ double sq(vector<point>& fig)
 int main()
 {
 	ifstream fin;
-	fin.open("point3.in");
+	fin.open("distance4.in");
 	ofstream out;          // поток для записи
-	out.open("point3.out");
+	out.open("distance4.out");
 
+	point A, B, C;
+	fin >> A.x >> A.y >> B.x >> B.y >> C.x >> C.y;
+
+	
 	
 
 }
