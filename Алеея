@@ -1,0 +1,190 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <iomanip>
+#include <map>
+#include <math.h>
+#include <fstream>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+#define all(x) x.begin(), x.end()
+
+double PI = 3.1415926535;
+
+struct point {
+	double x, y;
+	point(double x = 0, double y = 0) : x(x), y(y) {};
+
+	point operator + (point B) {
+		point res;
+		res.x = x + B.x;
+		res.y = y + B.y;
+		return res;
+	}
+	point operator - (point B) {
+		point res;
+		res.x = x - B.x;
+		res.y = y - B.y;
+		return res;
+	}
+	point operator * (double k) {
+		point res;
+		res.x = x * k;
+		res.y = y * k;
+		return res;
+	}
+};
+
+struct line {
+	double A, B, C;
+	line() {};
+	line(point p1, point p2) {
+		A = p2.y - p1.y;
+		B = p1.x - p2.x;
+		C = -p1.x * p2.y + p2.x * p1.y;
+	}
+	line(double A_IN, double B_IN, double C_IN) {
+		A = A_IN;
+		B = B_IN;
+		C = C_IN;
+	}
+
+};
+
+// квадрат длинны вектора A
+double dist2(point A)
+{
+	return A.x * A.x + A.y * A.y;
+}
+
+// скалярное произведение
+double dot(point A, point B)
+{
+	return A.x * B.x + A.y * B.y;
+}
+
+// векторное произведение
+double cross(point A, point B)
+{
+	return A.x * B.y - A.y * B.x;
+}
+
+
+double angle(double x1, double y1, double x2, double y2)
+{
+	double t = (x1 * x2 + y1 * y2) / (sqrt((double)x1 * x1 + y1 * y1) * sqrt((double)x2 * x2 + y2 * y2));
+	if (t < -1) t = -1;
+	else if (t > 1) t = 1;
+	return acos(t);
+}
+
+// расстояние от точки до прямой
+double distLineAndPoint(line F, point K) {
+	point N;
+	N.x = F.A;
+	N.y = F.B;
+	return abs(F.A * K.x + F.B * K.y + F.C) / sqrt(dist2(N));
+}
+
+// знак расположения точки относительно прямой
+int sign(line L, point p) {
+	double eps = 1e-8;
+	if (abs(L.A * p.x + L.B * p.y + L.C) > 0) {
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
+// расстояние от точки до луча
+double distance_from_point_and_ray(point A, point VA, point VB) {
+	point V = VB - VA;
+	line L(VB, VA);
+	double dist_lineL_point = distLineAndPoint(L, A);
+
+	if (dot(VB - VA, A - VA) > 0) {
+		return dist_lineL_point;
+	}
+	else {
+		return sqrt(dist2(VA - A));
+	}
+}
+
+// расстояние от точки А до отрезка [B,C]
+double distance_from_segment_point(point A, point B, point C) {
+
+	line F(B, C);
+	double minim2;
+	minim2 = min(dist2(A - C), dist2(A - B));
+
+	if (dot(A - C, B - C) >= 0 && dot(A - B, C - B) >= 0) {
+
+		return min(minim2, distLineAndPoint(F, A));
+	}
+	else if (dot(A - C, B - C) < 0 || dot(A - B, C - B) < 0) {
+		return sqrt(minim2);
+	}
+	return 0;
+}
+
+// площадь выпуклого многоугольника
+double sq(vector<point>& fig)
+{
+	double res = 0;
+	for (unsigned i = 0; i < fig.size(); i++)
+	{
+		point
+			p1 = i ? fig[i - 1] : fig.back(),
+			p2 = fig[i];
+		res += (p1.x - p2.x) * (p1.y + p2.y);
+	}
+	return fabs(res) / 2;
+}
+
+int main()
+{
+	ld square_ans = 0;
+	int n;
+	cin >> n;
+	
+	vector<pair<ld, ld>> V(n);
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> V[i].first >> V[i].second;
+
+		square_ans += V[i].second * V[i].second * PI;
+	}
+
+	sort(all(V));
+
+	for (size_t i = 0; i < n - 1; i++)
+	{
+		
+		ld x1 = V[i].first, x2 = V[i+1].first,
+			r1 = V[i].second, r2 = V[i+1].second;
+		if (abs(x1 - x2) < (r1 + r2)) 
+		{
+			ld x = (-r1 * r1 + r2 * r2 + x1 * x1 - x2 * x2);
+			x /= 2 * x1 - 2 * x2;
+
+			ld y = sqrt((r1 * r1) - ((x - x1) * (x - x1)));
+
+			ld square_1 = r1 * r1 * PI * asin(y / r1) / (2 * PI);
+			ld square_2 = r2 * r2 * PI * asin(y / r2) / (2 * PI);
+
+			square_1 -= abs(x - x1) * y / 2;
+			square_2 -= abs(x - x2) * y / 2;
+
+			square_ans -= 2 * (square_1 + square_2);
+		}
+	}
+		
+	cout << fixed << setprecision(9) << square_ans;
+	
+}
+
