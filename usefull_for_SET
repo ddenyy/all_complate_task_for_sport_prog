@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <iomanip>
+#include <map>
+#include <math.h>
+#include <fstream>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <deque>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef vector<int> veci;
+#define all(x) x.begin(), x.end()
+
+double PI = 3.1415926535;
+
+
+int main()
+{
+	int n, m;
+	int cur;
+	cin >> n >> m;
+	set<int> A;
+	set<int> B;
+
+	vector<int> Peresechenie;
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> cur;
+		A.insert(cur);
+	}
+	for (int i = 0; i < m; i++)
+	{
+		cin >> cur;
+		B.insert(cur);
+	}
+
+
+	// пересечения множеств
+
+	set<int>::iterator it;
+	set<int> intersect;
+	set_intersection(all(A), all(B), inserter(intersect, intersect.begin()));
+	
+	cout << "INTERSECTION: " << intersect.size() << '\n';
+
+	for (it = intersect.begin(); it != intersect.end(); ++it)
+	{
+		cout << *it << ' ';
+	}
+
+	cout << '\n';
+
+	// объединения множеств
+
+	set<int> merg;
+	set_union(all(A), all(B),
+		inserter(merg, merg.begin()));
+
+	cout << "UNION: " << merg.size() << '\n';
+	for (it = merg.begin(); it != merg.end(); ++it)
+	{
+		cout << *it << ' ';
+	}
+
+	cout << '\n';
+
+
+	// вычитание множества А из множества В
+
+	set<int> diff;
+	set_difference(all(A), all(B), inserter(diff, diff.begin()));
+
+	cout << "A SUBTRACT B: " << diff.size() << '\n';
+	for (it = diff.begin(); it != diff.end(); ++it)
+	{
+		cout << *it << ' ';
+	}
+
+}
