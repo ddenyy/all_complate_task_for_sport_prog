@@ -1,0 +1,195 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <iomanip>
+#include <map>
+#include <math.h>
+#include <fstream>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <deque>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef vector<pair<int, int>> vpii;
+typedef vector<int> vi;
+#define all(x) x.begin(), x.end()
+double PI = 3.1415926535;
+
+
+// структура расписания дня
+struct timeTable 
+{
+	timeTable() {};
+	timeTable(int day, int hh, int mm) : day(day), hh(hh), mm(mm) {};
+	int day;
+	int hh;
+	int mm;
+};
+
+// парсер для ввода
+void parseInputs(string& day, string& hh, string& mm)
+{
+	cin >> day;
+	getline(cin, hh, ':');
+	cin >> mm;
+}
+
+void clearVector(vector<string>& V)
+{
+	for (size_t i = 0; i < V.size(); i++)
+	{
+		V[i].clear();
+	}
+	V.clear();
+}
+
+// ф-ция заполняет распарсенные введённые данные в структуры таблицы
+timeTable inputDataOfTimeTable()
+{
+	// это массив дней недели
+	vector<string> Week = { "monday", "tuesday" , "wednesday", "thursday", "friday", "saturday", "sunday" };
+	string day, time, hh, mm;
+	parseInputs(day, hh, mm);
+	// номер дня
+	int dayId = find(all(Week), day) - Week.begin();
+	timeTable initTable(dayId + 1, stoi(hh), stoi(mm));
+
+	clearVector(Week);
+	return initTable;
+}
+
+// ф-ция заполнения таблицы расписаний
+void fillTable(vector<pair<timeTable, timeTable>>& inMoskow, vector<pair<timeTable, timeTable>>& inYar, int countTrainsInMoscow, int countTrainsInYar)
+{
+	for (size_t i = 0; i < countTrainsInMoscow; i++)
+	{
+		inMoskow[i].first = inputDataOfTimeTable();
+		inMoskow[i].second = inputDataOfTimeTable();
+	}
+	for (size_t i = 0; i < countTrainsInYar; i++)
+	{
+		inYar[i].first = inputDataOfTimeTable();
+		inYar[i].second = inputDataOfTimeTable();
+	}
+}
+
+// ф-ция считает минуты между двумя днями
+int count_minutes(pair<timeTable, timeTable> table)
+{
+	if (table.first.day > table.second.day)
+	{
+		int diff_day_to_mm = 24 * 60 * abs(7 - abs(table.second.day - table.first.day));
+		int diff_hh_mm = (- table.first.hh + table.second.hh) * 60;
+		int diff_mm = (-table.first.mm + table.second.mm);
+		return diff_day_to_mm + diff_hh_mm + diff_mm;
+	}
+	else if (table.first.day < table.second.day)
+	{
+		int diff_day_to_mm = (table.second.day - table.first.day) * 24 * 60;
+		int diff_hh_to_mm = (table.second.hh - table.first.hh) * 60;
+		int diff_mm = (table.second.mm - table.first.mm);
+		return diff_day_to_mm + diff_hh_to_mm + diff_mm;
+	}
+	else if (table.first.day == table.second.day && table.first.hh < table.second.hh)
+	{
+		int diff_hh_mm = (table.second.hh - table.first.hh) * 60;
+		int diff_mm = (table.second.mm - table.first.mm);
+		return diff_hh_mm + diff_mm;
+	}
+	else if (table.first.day == table.second.day && table.first.hh > table.second.hh)
+	{
+		int diff_day_mm = 7 * 24 * 60;
+		int diff_hh_mm = (table.second.hh - table.first.hh) * 60;
+		int diff_mm = (table.second.mm - table.first.mm);
+		return diff_day_mm + diff_hh_mm + diff_mm;
+	}
+	else if (table.first.day == table.second.day && table.first.hh == table.second.hh && table.first.mm == table.second.mm)
+	{
+		return 0;
+	}
+	else if (table.first.day == table.second.day && table.first.hh == table.second.hh && table.first.mm > table.second.mm)
+	{
+		int diff_day_mm = 7 * 24 * 60;
+		int diff_mm = table.second.mm - table.first.mm;
+		return diff_day_mm + diff_mm;
+	}
+	else if (table.first.day == table.second.day && table.first.hh == table.second.hh && table.first.mm < table.second.mm)
+	{
+		int diff_mm = table.second.mm - table.first.mm;
+		return diff_mm;
+	}
+}
+
+// ф-ция поиска минимального времени пути из яр в мск и обратно + ожидание поездов на вокзалах
+pair<int, int> find_minim_time(vector<pair<timeTable, timeTable>>& inMoskow, vector<pair<timeTable, timeTable>>& inYar, pair< timeTable, timeTable>& Conference, int countTrainsInMoscow, int countTrainsInYar)
+{
+	// минмальные константы в которых будет лежать минимальное время пути между городами + ожидание поезда с вокзала
+	int minim_Moscow = 1e8;
+	int minim_Yar = 1e8;
+
+	for (int i = 0; i < countTrainsInMoscow; i++)
+	{
+		int road_time_to_Moscow = count_minutes(inMoskow[i]);
+
+		pair<timeTable, timeTable> time_toMoscow;
+		time_toMoscow.first = inMoskow[i].second;
+		time_toMoscow.second = Conference.first;
+
+		int diff_time_toMoscow = count_minutes(time_toMoscow);
+
+		minim_Moscow = min(minim_Moscow, diff_time_toMoscow + road_time_to_Moscow);
+	}
+	for (int i = 0; i < countTrainsInYar; i++)
+	{
+		int road_time_to_Yar = count_minutes(inYar[i]);
+		pair< timeTable, timeTable> time_toYar;
+		time_toYar.first = Conference.second;
+		time_toYar.second = inYar[i].first;
+		int diff_time_toYar = count_minutes(time_toYar);
+		minim_Yar = min(minim_Yar, diff_time_toYar + road_time_to_Yar);
+	}
+
+	pair<int, int> ans;
+	ans.first = minim_Moscow;
+	ans.second = minim_Yar;
+	return ans;
+
+}
+
+int main()
+{
+	// старт и конец конференции
+	timeTable startConference, finishConference;
+
+	startConference = inputDataOfTimeTable();
+	finishConference = inputDataOfTimeTable();
+
+	// пара для начала и конца конференции
+	pair< timeTable, timeTable> Conference;
+	Conference.first = startConference;
+	Conference.second = finishConference;
+
+	// время конференции
+	int time_Conference = count_minutes(Conference);
+	// количество рейсов поездов в мск и в яр
+	int countTrainsInMoscow, countTrainsInYar;
+	cin >> countTrainsInMoscow >> countTrainsInYar;
+
+	// массивы расписаний поездов в мск и ярославль соответственно
+	vector<pair<timeTable, timeTable>> inMoskow(countTrainsInMoscow);
+	vector<pair<timeTable, timeTable>> inYar(countTrainsInYar);
+
+	// ф-ция считывает данные расписания таблиц и 
+	fillTable(inMoskow, inYar, countTrainsInMoscow, countTrainsInYar);
+	
+	pair<int, int> minims = find_minim_time(inMoskow, inYar, Conference, countTrainsInMoscow, countTrainsInYar);
+	cout << minims.first + minims.second + time_Conference << '\n';
+
+	inMoskow.clear();
+	inYar.clear();
+}
