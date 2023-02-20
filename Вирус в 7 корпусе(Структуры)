@@ -1,0 +1,132 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <set>
+#include <iomanip>
+#include <map>
+#include <math.h>
+#include <fstream>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <deque>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef vector<pair<int, int>> vpii;
+typedef vector<int> vi;
+#define all(x) x.begin(), x.end()
+double PI = 3.1415926535;
+
+// структура для базы данных
+struct File {
+	string name;
+	string command;
+};
+
+// компоратор для сортировки
+bool comp(File a, File b)
+{
+	return a.name < b.name;
+}
+
+// ф-ция перевода комманды в валидный вид для базы данных
+string convert_command(string command)
+{
+	string new_com;
+	if (command == "read" || command == " read")
+	{
+		new_com = "R";
+	}
+	else if (command == "write" || command == " write")
+	{
+		new_com = "W";
+	}
+	else if (command == "execute" || command == " execute")
+	{
+		new_com = "X";
+	}
+	return new_com;
+}
+
+// ф-ция для считывания файла
+void input_vector(vector<File>& DataBase, int size_DataBase)
+{
+	string s;
+	string command;
+	for (int i = 0; i < size_DataBase; i++)
+	{
+		cin >> s;
+		getline(cin, command);
+		DataBase[i].name = s;
+		DataBase[i].command = command;
+	}
+}
+
+// ф-ция для чистки векторов 
+void clear_vector(vector<File> Vec, int size_vec)
+{
+	for (int i = 0; i < size_vec; i++)
+	{
+		Vec[i].name.clear();
+		Vec[i].command.clear();
+	}
+	Vec.clear();
+}
+
+// вывод ответа
+void output_answer(vector<File>& DataBase, File Cur_file, int id)
+{
+	if (DataBase[id].command.find(Cur_file.command) != -1)
+	{
+		cout << "OK" << '\n';
+	}
+	else {
+		cout << "Access denied" << '\n';
+	}
+}
+
+// обработка запроса
+pair<File, int> find_DataBase(vector<File>& DataBase)
+{
+		string command;
+		string name;
+		cin >> command >> name;
+
+		// вспомогательная структура для корректного поиска по базе данных
+		File Cur_file;
+		Cur_file.name = name;
+		Cur_file.command = convert_command(command);
+
+		int id = lower_bound(all(DataBase), Cur_file, comp) - DataBase.begin();
+
+		pair<File, int> ans;
+		ans.first = Cur_file;
+		ans.second = id;
+		return ans;	
+}
+
+
+int main()
+{
+	int size_DataBase;
+	cin >> size_DataBase;
+
+	vector<File> DataBase(size_DataBase);
+	input_vector(DataBase, size_DataBase);
+	sort(all(DataBase), comp);
+
+	int count_request;
+	cin >> count_request;
+	for (int i = 0; i < count_request; i++)
+	{
+		// пара - файл и его id в базе данных
+		pair<File, int> Cur_File = find_DataBase(DataBase);
+		output_answer(DataBase, Cur_File.first, Cur_File.second);
+	}
+	clear_vector(DataBase, size_DataBase);
+
+	return 0;
+}
